@@ -1,12 +1,22 @@
 ArrayList <Bullet> bullets;
 ArrayList <Asteroid> asteroids;
-Direction direction;
+ArrayList <Button> buttons;
+
+float bulletSpeed;
 Ship ship;
 int asteroidTime;
+int timeBetweenAsteroids;
+int maxTimeBetweenBullets;
+int bulletTime;
 int score;
 
+float distanceToMove;
+boolean keys[];
+
+boolean okToShootBullet;
+
 void setup() {
-  size(1200,500);
+  size(1100,600);
   background(0);
   fill(255);
   rectMode(CORNERS);
@@ -14,11 +24,15 @@ void setup() {
   bullets = new ArrayList <Bullet>();
   asteroids = new ArrayList <Asteroid>();
   ship = new Ship(width/2, height/2);
+  buttons = new ArrayList <Button>();
+  setupButtons();
   
-  asteroidTime = 1;
+  bulletSpeed = 10;
+  
+  timeBetweenAsteroids = 200;
+  maxTimeBetweenBullets = 10;
   score = 0;
-  
-  direction = Direction.ZERO;
+  keys = new boolean[4];
 }
 
 void draw() {
@@ -27,19 +41,31 @@ void draw() {
   text("Bullets: " + bullets.size(), 20, 20);
   text("Asteroids: " + asteroids.size(), width - 80, 20);
   text("Score: " + score, width/2 - 25, 20);
-  text("Use WASD to move, and click to shoot", 20, height - 20);
+  text("Use WASD to move, and click to shoot", 20, height - 25);
+  text("Click a button to increment a value, right/center click it to decrement.", 20, height - 12);
   
   ship.display(); 
   moveAsteroids();
+  displayButtons();
+  
+  okToShootBullet = false;
   
   if(millis() > asteroidTime) {
-    asteroidTime += 1;
+    asteroidTime += timeBetweenAsteroids;
     addAsteroid();
   }
   
-  if(keyPressed) {
-    ship.moveShip(direction); 
+  if(millis() > bulletTime) {
+    bulletTime += maxTimeBetweenBullets;
+    okToShootBullet = true;
   }
+  
+  if(mousePressed && okToShootBullet && !buttonsArePressed()) {
+    addBullet();
+  }
+  
+  float[] movement = bufferKeys();
+  ship.moveShip(movement[0] * ship.speed, movement[1] * ship.speed);
   
   moveBullets();
   checkCollisions();
@@ -55,6 +81,12 @@ void moveBullets() {
 void moveAsteroids() {
   for(Asteroid a : asteroids)
     a.moveAsteroid();
+}
+
+void displayButtons() {
+  for(Button b : buttons) {
+    b.display();
+  }  
 }
 
 void checkBulletsOOB() {
@@ -78,7 +110,15 @@ void checkAsteroidsOOB() {
 void addAsteroid() {
   float x = random(50, width-50);
   float y = random(50, height-50);
-  asteroids.add(new Asteroid(x, y, color(random(256), random(256), random(256)))); 
+  asteroids.add(new Asteroid(x, y, (int)random(256), (int)random(256), (int)random(256), 255, "RGB")); 
+}
+
+void addBullet() {
+  float angle = degrees(atan((mouseY - ship.gunY()) / (ship.gunX() - mouseX)));
+  if(mouseX < ship.gunX()) {
+    angle += 180;
+  }
+  bullets.add(ship.shootGun(angle, bulletSpeed));
 }
 
 void checkCollisions() {
@@ -86,34 +126,25 @@ void checkCollisions() {
     for(int j = 0; j < bullets.size(); j++) {
       if(asteroids.get(i).collided(bullets.get(j))) {
         asteroids.get(i).exploded = true;
-        //bullets.remove(j--);
+        bullets.remove(j--);
         score++;
       }
     }
   }  
 }
 
-void keyPressed() {
-  switch(key) {
-    case 'A' : case 'a':
-      direction = Direction.WEST;
-      break;
-    case 'W': case 'w':
-      direction = Direction.NORTH;
-      break;
-    case 'D': case 'd':
-      direction = Direction.EAST;
-      break;
-    case 'S': case 's':
-      direction = Direction.SOUTH;
-      break;  
-  } 
+void setupButtons() {
+  buttons.add(new ButtonStatic(width - 95, height - 50, 85, 40, new DynamicColor(200, 130, 0, 255, "RGB"), " Bullet speed"));
+  buttons.add(new ButtonStatic(width - 185, height - 50, 85, 40, new DynamicColor(200, 130, 0, 255, "RGB"), "  Ship speed"));  
 }
 
-void mouseDragged() {
-  float angle = degrees(atan((mouseY - ship.gunY()) / (ship.gunX() - mouseX)));
-  if(mouseX < ship.gunX()) {
-    angle += 180;
+boolean buttonsArePressed() {
+  for(Button b : buttons) {
+    if(b.click()) {
+      return true;
+    }
   }
-  bullets.add(ship.shootGun(angle));
+  return false;
 }
+
+

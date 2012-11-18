@@ -1,16 +1,16 @@
 class Asteroid {
   float xPos;
   float yPos;
-  color c;
+  DynamicColor asteroidColor;
   float angle;
   float speed;
   float rad;
   boolean exploded;
   
-  Asteroid(float xPos, float yPos, color c) {
+  Asteroid(float xPos, float yPos, int component1, int component2, int component3, int alphaComponent, String mode) {
     this.xPos = xPos;
     this.yPos = yPos;
-    this.c = c;
+    asteroidColor = new DynamicColor(component1, component2, component3, alphaComponent, mode);
     angle = random(0, TWO_PI);
     speed = random(1) + 1;
     rad = 40;
@@ -26,7 +26,7 @@ class Asteroid {
   }
   
   void display() {
-    fill(c);
+    fill(asteroidColor.getRGB());
     ellipse(xPos, yPos, rad, rad);
   }
   
@@ -34,4 +34,3 @@ class Asteroid {
     return dist(xPos, yPos, b.posX, b.posY) < rad;
   }
 }
-

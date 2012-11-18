@@ -4,16 +4,15 @@ class Bullet {
   float speed;
   float angle;
   float len;
-  color bulletColor;
+  DynamicColor bulletColor;
   
-  Bullet(float posX, float posY, float angle, int h, int s, int b) {
+  Bullet(float posX, float posY, float angle, DynamicColor bulletColor, float speed) {
     this.posX = posX;
     this.posY = posY;
     this.angle = radians(angle);
-    colorMode(HSB, 360, 255, 255);
-    bulletColor = color(h, s, b);
+    this.bulletColor = bulletColor;
     len = 5;
-    speed = 10;
+    this.speed = speed;
   }
   
   void moveBullet() {
@@ -23,7 +22,7 @@ class Bullet {
   }
   
   void displayBullet() {
-    stroke(bulletColor);
+    stroke(bulletColor.getHSB());
     strokeWeight(2);
     line(posX, posY, posX + cos(angle) * len, posY - sin(angle) * len);
   }
