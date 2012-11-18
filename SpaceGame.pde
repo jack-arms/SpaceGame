@@ -13,6 +13,7 @@ int score;
 boolean keys[];
 
 boolean okToShootBullet;
+boolean bulletsDisappearOnImpact;
 
 void setup() {
   size(1100,600);
@@ -28,10 +29,12 @@ void setup() {
   
   bulletSpeed = 10;
   
-  maxTimeBetweenAsteroids = 200;
+  maxTimeBetweenAsteroids = 50;
   maxTimeBetweenBullets = 10;
   score = 0;
   keys = new boolean[4];
+  
+  bulletsDisappearOnImpact = false;
 }
 
 void draw() {
@@ -84,7 +87,12 @@ void moveAsteroids() {
 
 void displayButtons() {
   for(Button b : buttons) {
-    b.display();
+    if(b instanceof ButtonToggle) {
+      ((ButtonToggle)b).display();
+    }
+    else {
+      b.display(b._nonPressedColor);
+    }
   }  
 }
 
@@ -125,7 +133,8 @@ void checkCollisions() {
     for(int j = 0; j < bullets.size(); j++) {
       if(asteroids.get(i).collided(bullets.get(j))) {
         asteroids.get(i).exploded = true;
-        bullets.remove(j--);
+        if(bulletsDisappearOnImpact)
+          bullets.remove(j--);
         score++;
       }
     }
@@ -135,11 +144,12 @@ void checkCollisions() {
 void setupButtons() {
   buttons.add(new ButtonValueChanger(width - 95, height - 50, 85, 40, new DynamicColor(200, 130, 0, 255, "RGB"), " Bullet speed"));
   buttons.add(new ButtonValueChanger(width - 185, height - 50, 85, 40, new DynamicColor(200, 130, 0, 255, "RGB"), "  Ship speed"));  
+  buttons.add(new ButtonToggle(width - 355, height - 50, 165, 40, new DynamicColor(20, 70, 172, 255, "RGB"), "Bullets disappear on impact"));
 }
 
 boolean buttonsArePressed() {
   for(Button b : buttons) {
-    if(b.click()) {
+    if(b.isClicked()) {
       return true;
     }
   }

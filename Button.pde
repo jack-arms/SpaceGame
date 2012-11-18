@@ -7,25 +7,25 @@ class Button {
   
   String buttonText;
   
-  DynamicColor nonPressedColor;
+  DynamicColor _nonPressedColor;
   
   Button(float posX, float posY, float w, float h, DynamicColor nonPressedColor, String txt) {
     buttonPosX = posX;
     buttonPosY = posY;
     buttonWidth = w;
     buttonHeight = h;
-    this.nonPressedColor = nonPressedColor;
+    this._nonPressedColor = nonPressedColor;
     buttonText = txt;
   }
   
-  boolean click() {
+  boolean isClicked() {
     return mouseX > buttonPosX && mouseX < buttonPosX + buttonWidth 
        && mouseY > buttonPosY && mouseY < buttonPosY + buttonHeight;
   } 
   
-  void display() {
+  void display(DynamicColor fillColor) {
     rectMode(CORNER);
-    fill(nonPressedColor.getRGB());
+    fill(fillColor.getRGB());
     stroke(255);
     rect(buttonPosX, buttonPosY, buttonWidth, buttonHeight);
     fill(255);

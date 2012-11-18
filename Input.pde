@@ -53,16 +53,22 @@ float[]  bufferKeys() {
 }
 
 void mousePressed() {
-  if(buttons.get(0).click()) {
-    float newSpeed = ((ButtonValueChanger)buttons.get(0)).clickAction(bulletSpeed, 2.0, 1.0, 30.0);
+  if(buttons.get(0).isClicked()) {
+    float newSpeed = ((ButtonValueChanger)buttons.get(0)).click(bulletSpeed, 2.0, 1.0, 30.0);
     for(Bullet b : bullets) {
       b.speed = newSpeed;
     }
     bulletSpeed = newSpeed;
   }
   
-  else if(buttons.get(1).click()) {
-    float newSpeed = ((ButtonValueChanger)buttons.get(1)).clickAction(ship.speed, 2, 1, 50);
+  else if(buttons.get(1).isClicked()) {
+    float newSpeed = ((ButtonValueChanger)buttons.get(1)).click(ship.speed, 2, 1, 50);
     ship.setSpeed(newSpeed);
+  }
+  
+  else if(buttons.get(2).isClicked()) {
+    ButtonToggle b = (ButtonToggle)buttons.get(2);
+    b.click();
+    bulletsDisappearOnImpact = b._pressed;
   }
 }

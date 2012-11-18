@@ -3,9 +3,9 @@ class ButtonValueChanger extends Button {
     super(posX, posY, w, h, nonPressedColor, txt);
   }  
     
-  float clickAction(float valueToChange, float increment, float lowerBound, float upperBound) {
+  float click(float valueToChange, float increment, float lowerBound, float upperBound) {
     float newValue = valueToChange;
-    if(super.click()) {
+    if(super.isClicked()) {
       if(mouseButton == LEFT) {
         newValue += increment;
       }

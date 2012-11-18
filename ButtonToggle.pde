@@ -1,32 +1,26 @@
 class ButtonToggle extends Button {
-  boolean pressed;
-  DynamicColor pressedColor;
+  boolean _pressed;
+  DynamicColor _pressedColor;
   
   ButtonToggle(float posX, float posY, float w, float h, DynamicColor nonPressedColor, String txt) {
     super(posX, posY, w, h, nonPressedColor, txt);
-    pressedColor = new DynamicColor(nonPressedColor._red, nonPressedColor._green, nonPressedColor._blue, nonPressedColor._alpha - 150, "RGB");
-    pressed = false;
+    _pressedColor = new DynamicColor(nonPressedColor._red, nonPressedColor._green, nonPressedColor._blue, nonPressedColor._alpha - 150, "RGB");
+    _pressed = false;
   }
   
-  boolean click() {
-    if(super.click()) {
-      pressed = !pressed;
-      return true;
+  void click() {
+    if(super.isClicked()) {
+      _pressed = !_pressed;
     }
-    else
-      return false;
   }
   
   void display() {
     rectMode(CORNER);
-    if(pressed) {
-      fill(pressedColor.getRGB());
-      rect(buttonPosX, buttonPosY, buttonWidth, buttonHeight);
-      fill(255);
-      text(buttonText, buttonPosX + 5, buttonPosY + buttonHeight/2 + 5);
+    if(_pressed) {
+      super.display(_pressedColor);
     }
     else {
-      super.display();
+      super.display(_nonPressedColor);
     }
   }
 }
