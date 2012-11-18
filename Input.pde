@@ -54,18 +54,15 @@ float[]  bufferKeys() {
 
 void mousePressed() {
   if(buttons.get(0).click()) {
-    float change = mouseButton == LEFT ? 1 : -1;
+    float newSpeed = ((ButtonValueChanger)buttons.get(0)).clickAction(bulletSpeed, 2.0, 1.0, 30.0);
     for(Bullet b : bullets) {
-      b.speed += change;
-      b.speed = constrain(b.speed, 1, 30);
+      b.speed = newSpeed;
     }
-    bulletSpeed += change;
-    bulletSpeed = constrain(bulletSpeed, 1, 30);
+    bulletSpeed = newSpeed;
   }
   
   else if(buttons.get(1).click()) {
-    float change = mouseButton == LEFT ? 1 : -1;
-    ship.changeSpeed(change);
-    ship.speed = constrain(ship.speed, 1, 50); 
+    float newSpeed = ((ButtonValueChanger)buttons.get(1)).clickAction(ship.speed, 2, 1, 50);
+    ship.setSpeed(newSpeed);
   }
 }

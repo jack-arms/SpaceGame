@@ -5,12 +5,11 @@ ArrayList <Button> buttons;
 float bulletSpeed;
 Ship ship;
 int asteroidTime;
-int timeBetweenAsteroids;
+int maxTimeBetweenAsteroids;
 int maxTimeBetweenBullets;
 int bulletTime;
 int score;
 
-float distanceToMove;
 boolean keys[];
 
 boolean okToShootBullet;
@@ -29,7 +28,7 @@ void setup() {
   
   bulletSpeed = 10;
   
-  timeBetweenAsteroids = 200;
+  maxTimeBetweenAsteroids = 200;
   maxTimeBetweenBullets = 10;
   score = 0;
   keys = new boolean[4];
@@ -51,7 +50,7 @@ void draw() {
   okToShootBullet = false;
   
   if(millis() > asteroidTime) {
-    asteroidTime += timeBetweenAsteroids;
+    asteroidTime += maxTimeBetweenAsteroids;
     addAsteroid();
   }
   
@@ -134,8 +133,8 @@ void checkCollisions() {
 }
 
 void setupButtons() {
-  buttons.add(new ButtonStatic(width - 95, height - 50, 85, 40, new DynamicColor(200, 130, 0, 255, "RGB"), " Bullet speed"));
-  buttons.add(new ButtonStatic(width - 185, height - 50, 85, 40, new DynamicColor(200, 130, 0, 255, "RGB"), "  Ship speed"));  
+  buttons.add(new ButtonValueChanger(width - 95, height - 50, 85, 40, new DynamicColor(200, 130, 0, 255, "RGB"), " Bullet speed"));
+  buttons.add(new ButtonValueChanger(width - 185, height - 50, 85, 40, new DynamicColor(200, 130, 0, 255, "RGB"), "  Ship speed"));  
 }
 
 boolean buttonsArePressed() {

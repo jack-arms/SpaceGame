@@ -41,5 +41,5 @@ class Ship {
   float gunX() { return xPos + 3 * partWidth; }
   float gunY() { return yPos - 5 * partWidth; }
   
-  void changeSpeed(float value) { speed += value; }
+  void setSpeed(float value) { speed = value; }
 }
